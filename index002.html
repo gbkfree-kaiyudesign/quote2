@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>室內設計報價系統</title>
+<style>
+:root {
+  --bg: #0e0e11;
+  --bg2: #131318;
+  --surface: #1a1a20;
+  --surface2: #21212a;
+  --surface3: #28282f;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.12);
+  --text: #ddddd8;
+  --text2: #888888;
+  --text3: #484848;
+  --green: #50e88a;
+  --green-dim: rgba(80,232,138,0.1);
+  --green-border: rgba(80,232,138,0.22);
+  --gold: #e4b84a;
+  --gold-dim: rgba(228,184,74,0.1);
+  --blue: #5ba4f5;
+  --blue-dim: rgba(91,164,245,0.1);
+  --red: #f07070;
+  --red-dim: rgba(240,112,112,0.1);
+  --amber: #f5a623;
+  --amber-dim: rgba(245,166,35,0.1);
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'SF Pro Display', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: rgba(26,26,32,0.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border2);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 56px;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+/* ── LOGO AREA: replace .logo-icon src with your image ── */
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #1e4d35 0%, #2d7a52 50%, #50e88a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  box-shadow: 0 0 12px rgba(80,232,138,0.25);
+}
+/* To use your own logo image, add this inside .logo-icon or replace it:
+   <img src="YOUR_LOGO.png" style="width:36px;height:36px;border-radius:9px;object-fit:contain">
+*/
+.logo-text { line-height: 1.15; }
+.logo-name { font-size: 14px; font-weight: 700; letter-spacing: 0.06em; color: #fff; }
+.logo-sub  { font-size: 9.5px; letter-spacing: 0.14em; color: var(--text2); text-transform: uppercase; }
+
+.topbar-actions { display: flex; gap: 7px; align-items: center; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12.5px; padding: 7px 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border2); cursor: pointer; font-weight: 500;
+  font-family: inherit; transition: all 0.15s; white-space: nowrap;
+}
+.btn-ghost  { background: var(--surface2); color: var(--text); }
+.btn-ghost:hover { background: var(--surface3); }
+.btn-green  { background: var(--green); color: #0a1f12; border-color: var(--green); font-weight: 700; }
+.btn-green:hover { background: #6df0a0; }
+.btn-amber  { background: var(--amber-dim); color: var(--amber); border-color: rgba(245,166,35,0.3); }
+.btn-amber:hover { background: rgba(245,166,35,0.18); }
+.btn-blue   { background: var(--blue-dim); color: var(--blue); border-color: rgba(91,164,245,0.3); }
+.btn-blue:hover { background: rgba(91,164,245,0.18); }
+.btn-red    { background: var(--red-dim); color: var(--red); border-color: rgba(240,112,112,0.3); }
+.btn-red:hover { background: rgba(240,112,112,0.18); }
+
+/* ── LAYOUT ── */
+.container { max-width: 940px; margin: 0 auto; padding: 20px 16px 80px; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.card-title {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text2);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+}
+.card-title-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green); flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(80,232,138,0.6);
+}
+
+/* ── FORM FIELDS ── */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+@media (max-width: 640px) { .grid2,.grid3,.grid4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 400px) { .grid2,.grid3,.grid4 { grid-template-columns: 1fr; } }
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 10.5px; color: var(--text2); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+input[type=text], input[type=number], input[type=email], input[type=tel], input[type=date], select, textarea {
+  width: 100%; border: 1px solid var(--border2); border-radius: var(--radius-sm);
+  padding: 7px 10px; font-size: 13px; color: var(--text); background: var(--surface2);
+  outline: none; font-family: inherit; transition: border-color 0.15s, box-shadow 0.15s;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--green); box-shadow: 0 0 0 2.5px rgba(80,232,138,0.12);
+}
+textarea { resize: vertical; min-height: 64px; }
+select option { background: #1a1a20; color: var(--text); }
+
+/* ═══════════════════════════════════════════════
+   ★★★ COST SUMMARY BOX — MOST IMPORTANT ★★★
+═══════════════════════════════════════════════ */
+.cost-box {
+  background: var(--surface);
+  border: 1.5px solid var(--green);
+  border-radius: 14px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(80,232,138,0.08),
+    0 0 40px rgba(80,232,138,0.06),
+    0 8px 32px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(80,232,138,0.12);
+}
+.cost-box-header {
+  background: linear-gradient(90deg, rgba(80,232,138,0.07) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(80,232,138,0.18);
+  padding: 10px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.cost-box-title {
+  font-size: 11px; font-weight: 800; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--green);
+  display: flex; align-items: center; gap: 8px;
+}
+.cost-box-title::before {
+  content: '';
+  display: block; width: 3px; height: 14px;
+  background: var(--green);
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(80,232,138,0.6);
+}
+.cost-box-body { padding: 16px 18px; }
+
+.metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 16px; }
+@media (max-width: 520px) { .metrics { grid-template-columns: 1fr 1fr; } }
+.metric {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 9px;
+  padding: 13px 15px;
+  position: relative;
+  overflow: hidden;
+}
+.metric::after {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(80,232,138,0.35), transparent);
+}
+.metric-label { font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2); margin-bottom: 6px; }
+.metric-val { font-size: 21px; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.metric-val.v-green { color: var(--green); text-shadow: 0 0 24px rgba(80,232,138,0.3); }
+.metric-val.v-gold  { color: var(--gold);  text-shadow: 0 0 20px rgba(228,184,74,0.25); }
+
+.profit-row {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 9px; padding: 10px 14px;
+}
+.profit-row label { font-size: 11px; color: var(--text2); white-space: nowrap; font-weight: 600; letter-spacing: 0.04em; }
+.profit-row input[type=range] { flex: 1; min-width: 100px; accent-color: var(--green); cursor: pointer; height: 4px; }
+.profit-pct { font-size: 16px; font-weight: 800; color: var(--green); min-width: 44px; text-align: right; }
+
+/* ── GROUP DIVIDER ── */
+.group-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 18px 0 8px;
+}
+.group-badge {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.1em;
+  padding: 3px 10px; border-radius: 20px;
+  background: var(--green-dim); color: var(--green);
+  border: 1px solid var(--green-border);
+  white-space: nowrap;
+}
+.group-badge.b { background: var(--blue-dim); color: var(--blue); border-color: rgba(91,164,245,0.25); }
+.group-line { flex: 1; height: 1px; background: var(--border2); }
+.group-total-label { font-size: 11px; color: var(--text2); white-space: nowrap; }
+.group-total-val { font-size: 12px; font-weight: 700; color: var(--green); font-variant-numeric: tabular-nums; }
+.group-total-val.b { color: var(--blue); }
+
+/* ── SECTION CARDS ── */
+.section-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 6px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.section-card:hover { border-color: var(--border2); }
+.section-head {
+  padding: 10px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none;
+  background: var(--surface2);
+  transition: background 0.15s;
+}
+.section-head:hover { background: var(--surface3); }
+.section-head-left { display: flex; align-items: center; gap: 9px; }
+.sec-id {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.06em;
+  padding: 2px 7px; border-radius: 4px;
+  background: var(--green-dim); color: var(--green);
+  border: 1px solid var(--green-border);
+}
+.sec-id.b { background: var(--blue-dim); color: var(--blue); border-color: rgba(91,164,245,0.25); }
+.sec-name { font-size: 13px; font-weight: 600; }
+.sec-icon { font-size: 14px; }
+.sec-right { display: flex; align-items: center; gap: 10px; }
+.sec-total { font-size: 12px; font-weight: 700; color: var(--green); font-variant-numeric: tabular-nums; }
+.sec-total.b { color: var(--blue); }
+.caret { color: var(--text3); font-size: 10px; transition: transform 0.2s; }
+.caret.open { transform: rotate(90deg); }
+
+.section-body { padding: 12px 14px; }
+
+/* ── TABLE ── */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; min-width: 520px; }
+thead th {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text3); text-align: left; padding: 5px 7px;
+  border-bottom: 1px solid var(--border2); white-space: nowrap;
+}
+tbody td { padding: 4.5px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+tbody td input, tbody td select {
+  border: 1px solid var(--border); padding: 4px 7px;
+  font-size: 12px; background: var(--surface2); color: var(--text);
+  border-radius: 4px;
+}
+tbody td input:focus, tbody td select:focus { border-color: var(--green); outline: none; }
+.sub-cell { font-weight: 700; color: var(--green); white-space: nowrap; font-size: 12px; }
+.sub-cell.b { color: var(--blue); }
+.rm-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text3); font-size: 15px; padding: 2px 5px;
+  border-radius: 4px; line-height: 1;
+}
+.rm-btn:hover { color: var(--red); background: var(--red-dim); }
+
+.add-btn {
+  display: flex; align-items: center; gap: 6px; font-size: 12px;
+  padding: 7px 14px; border-radius: var(--radius-sm);
+  border: 1px dashed var(--border2); background: none;
+  color: var(--text2); cursor: pointer; width: 100%;
+  justify-content: center; margin-top: 8px; transition: all 0.15s;
+}
+.add-btn:hover { background: var(--green-dim); color: var(--green); border-color: var(--green-border); }
+
+/* ── PIE CHART ── */
+.pie-wrap { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.pie-legend { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 7px; }
+.leg { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.leg-name { flex: 1; color: var(--text2); }
+.leg-pct { font-weight: 700; min-width: 32px; text-align: right; }
+.leg-amt { color: var(--text3); font-size: 11px; min-width: 80px; text-align: right; }
+
+/* ── PAYMENT ── */
+.pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+@media (max-width: 500px) { .pay-grid { grid-template-columns: 1fr; } }
+
+/* ── SIGNATURE ── */
+.sig-wrap {
+  border: 1px solid var(--border2); border-radius: 8px;
+  background: var(--surface2); overflow: hidden;
+  cursor: crosshair; touch-action: none;
+}
+.sig-wrap canvas { display: block; width: 100%; }
+
+/* ── MODALS ── */
+.modal-bg {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75); z-index: 200;
+  align-items: center; justify-content: center;
+  padding: 16px; backdrop-filter: blur(6px);
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  padding: 22px;
+  width: 100%; max-width: 520px;
+  max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+}
+.modal-xl { max-width: 760px; }
+.modal-title { font-size: 15px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.modal-foot { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap; }
+
+/* ── AI PRICE ── */
+.ai-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 10px 12px; background: var(--surface2);
+  border: 1px solid var(--border2); border-radius: 8px; margin-bottom: 8px;
+}
+.ai-id { font-size: 10px; font-weight: 800; color: var(--green); min-width: 34px; padding-top: 1px; }
+.ai-label { font-size: 12px; font-weight: 600; }
+.ai-price { font-size: 16px; font-weight: 800; color: var(--green); margin: 3px 0; }
+.ai-note { font-size: 11px; color: var(--text2); }
+.spinner {
+  display: inline-block; width: 18px; height: 18px;
+  border: 2px solid var(--border2); border-top-color: var(--green);
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── GALLERY ── */
+.gal-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.gal-tab {
+  font-size: 11px; padding: 4px 12px; border-radius: 20px;
+  border: 1px solid var(--border2); background: var(--surface2);
+  color: var(--text2); cursor: pointer; font-family: inherit; transition: all 0.15s;
+}
+.gal-tab.active { background: var(--green-dim); color: var(--green); border-color: var(--green-border); }
+.gal-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+@media (max-width: 500px) { .gal-grid { grid-template-columns: repeat(2,1fr); } }
+.gal-item {
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.15s;
+}
+.gal-item:hover { border-color: var(--green); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+.gal-thumb {
+  aspect-ratio: 4/3; display: flex; align-items: center;
+  justify-content: center; font-size: 30px;
+  background: linear-gradient(135deg, var(--surface3), var(--surface2));
+}
+.gal-info { padding: 8px 10px; }
+.gal-name { font-size: 11.5px; font-weight: 600; margin-bottom: 2px; }
+.gal-desc { font-size: 10px; color: var(--text2); }
+
+/* ── HISTORY ── */
+.hist-item {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 7px;
+}
+.hist-meta { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.hist-btns { display: flex; gap: 5px; flex-shrink: 0; }
+.hist-btn {
+  font-size: 11px; padding: 4px 10px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border2); background: var(--surface);
+  color: var(--text); cursor: pointer;
+}
+.hist-btn:hover { background: var(--surface3); }
+.hist-btn.del:hover { background: var(--red-dim); color: var(--red); border-color: rgba(240,112,112,0.3); }
+.empty { text-align: center; padding: 28px; color: var(--text3); font-size: 13px; }
+
+/* ── ACTION BAR ── */
+.action-bar {
+  display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; margin-top: 6px;
+}
+
+/* ── PRINT ── */
+@media print {
+  .topbar, .action-bar, .add-btn, .rm-btn, .profit-row, .btn, .group-divider .btn { display: none !important; }
+  body { background: #fff; color: #000; }
+  .cost-box { border: 2px solid #000; box-shadow: none; }
+  .metric-val { color: #000 !important; }
+  .metric { background: #f5f5f5; border: 1px solid #ddd; }
+  .card, .section-card { border: 1px solid #ddd; page-break-inside: avoid; box-shadow: none; }
+  .section-body { display: block !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <!-- ★ 請把 logo 圖片放在這裡，例如:
+         <img src="logo.png" style="width:36px;height:36px;border-radius:9px;object-fit:contain">
+         目前使用的是文字佔位 logo -->
+    <svg width="36" height="36" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="border-radius:6px;flex-shrink:0">
+  <rect width="100" height="100" fill="#111"/>
+  <polygon points="28,18 72,18 28,62" fill="white"/>
+  <rect x="28" y="62" width="44" height="22" fill="white"/>
+  <polygon points="52,84 72,84 72,62" fill="#111"/>
+  <polygon points="72,18 72,36 54,18" fill="#111"/>
+  <line x1="30" y1="60" x2="70" y2="20" stroke="#111" stroke-width="8" stroke-linecap="round"/>
+</svg>
+    <div class="logo-text">
+      <div class="logo-name">INTERIOR DESIGN</div>
+      <div class="logo-sub">室內設計報價系統</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn btn-ghost" onclick="showGallery()">🖼 工法圖庫</button>
+    <button class="btn btn-blue" onclick="showAIPrice()">🤖 AI參考價格</button>
+    <button class="btn btn-ghost" onclick="showHistory()">📋 歷史報價</button>
+    <button class="btn btn-amber" onclick="saveQuote()">💾 存檔</button>
+    <button class="btn btn-green" onclick="window.print()">🖨️ 列印 / PDF</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- 客戶資訊 -->
+<div class="card">
+  <div class="card-title"><div class="card-title-dot"></div>客戶與專案資訊</div>
+  <div class="grid3" style="margin-bottom:10px">
+    <div class="field"><label>客戶姓名</label><input type="text" id="client-name" placeholder="例：林先生"></div>
+    <div class="field"><label>聯絡電話</label><input type="tel" id="client-phone" placeholder="0912-345-678"></div>
+    <div class="field"><label>電子信箱</label><input type="email" id="client-email" placeholder="name@example.com"></div>
+  </div>
+  <div class="grid3" style="margin-bottom:10px">
+    <div class="field"><label>專案地址</label><input type="text" id="project-addr" placeholder="台北市大安區..."></div>
+    <div class="field">
+      <label>空間類型</label>
+      <select id="space-type" onchange="updateSpaceType()">
+        <option value="apartment">一般住宅公寓</option>
+        <option value="house">透天厝</option>
+        <option value="office">辦公室</option>
+        <option value="shop">商業空間</option>
+        <option value="new">新成屋</option>
+        <option value="old">老屋翻新</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>設計風格</label>
+      <select id="style-type">
+        <option>現代簡約</option><option>北歐風</option><option>日式無印</option>
+        <option>工業風</option><option>古典歐式</option><option>輕奢風</option>
+      </select>
+    </div>
+  </div>
+  <div class="grid2" style="margin-bottom:10px">
+    <div class="field"><label>坪數</label><input type="number" id="area" value="30" min="1" max="999" step="0.5" onchange="recalc()"></div>
+    <div class="field"><label>備註（客戶可見）</label><input type="text" id="note" placeholder="例：本報價有效期 30 天，不含家電採購..."></div>
+  </div>
+</div>
+
+<!-- ★★★ 報價總覽 (最重要) ★★★ -->
+<div class="cost-box">
+  <div class="cost-box-header">
+    <div class="cost-box-title">報價總覽</div>
+    <div style="font-size:11px;color:var(--text2)" id="quote-date"></div>
+  </div>
+  <div class="cost-box-body">
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">工料總成本</div>
+        <div class="metric-val" id="cost-total">NT$ 0</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">建議報價（含利潤）</div>
+        <div class="metric-val v-green" id="quote-total">NT$ 0</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">每坪單價</div>
+        <div class="metric-val v-gold" id="per-ping">NT$ 0</div>
+      </div>
+    </div>
+    <div class="profit-row">
+      <label>利潤率 / 管理費</label>
+      <input type="range" min="5" max="60" step="1" value="25" id="profit-rate"
+        oninput="document.getElementById('profit-label').textContent=this.value+'%';recalc()">
+      <span class="profit-pct" id="profit-label">25%</span>
+    </div>
+  </div>
+</div>
+
+<!-- 工程分類 -->
+<div id="sections-container"></div>
+
+<!-- 費用分析圓餅圖 -->
+<div class="card">
+  <div class="card-title"><div class="card-title-dot"></div>費用結構分析</div>
+  <div class="pie-wrap">
+    <canvas id="pie-chart" width="160" height="160" style="flex-shrink:0"></canvas>
+    <div class="pie-legend" id="pie-legend"></div>
+  </div>
+</div>
+
+<!-- 匯款資訊 -->
+<div class="card">
+  <div class="card-title"><div class="card-title-dot"></div>匯款資訊</div>
+  <div class="pay-grid" style="margin-bottom:10px">
+    <div class="field"><label>銀行名稱</label><input type="text" id="bank-name" placeholder="例：台灣銀行"></div>
+    <div class="field"><label>分行</label><input type="text" id="bank-branch" placeholder="例：大安分行"></div>
+    <div class="field"><label>戶名</label><input type="text" id="bank-holder" placeholder="例：林OO設計有限公司"></div>
+    <div class="field"><label>帳號</label><input type="text" id="bank-account" placeholder="例：0123-456-789012"></div>
+  </div>
+  <div class="grid3">
+    <div class="field">
+      <label>付款條件</label>
+      <select id="pay-terms">
+        <option>簽約30% / 進場30% / 完工40%</option>
+        <option>簽約50% / 完工50%</option>
+        <option>簽約30% / 中期40% / 完工30%</option>
+        <option>一次付清</option>
+        <option>自訂</option>
+      </select>
+    </div>
+    <div class="field"><label>報價有效期（天）</label><input type="number" id="valid-days" value="30" min="1"></div>
+    <div class="field"><label>預計開工日</label><input type="text" id="start-date" placeholder="2025/09/01"></div>
+  </div>
+</div>
+
+<!-- 客戶簽名 -->
+<div class="card">
+  <div class="card-title"><div class="card-title-dot"></div>客戶確認簽名</div>
+  <div class="grid2" style="margin-bottom:12px">
+    <div class="field"><label>確認人姓名</label><input type="text" id="sig-name" placeholder="請填寫確認人姓名"></div>
+    <div class="field"><label>確認日期</label><input type="text" id="sig-date" placeholder="2025/08/15"></div>
+  </div>
+  <div class="field" style="margin-bottom:8px"><label>簽名欄（請在下方手寫簽名）</label></div>
+  <div class="sig-wrap">
+    <canvas id="sig-canvas" height="130"></canvas>
+  </div>
+  <div style="display:flex;gap:8px;margin-top:8px;justify-content:flex-end">
+    <button class="btn btn-ghost" onclick="clearSig()">清除簽名</button>
+    <button class="btn btn-ghost" onclick="saveSigImage()">📥 下載簽名圖</button>
+  </div>
+</div>
+
+<div class="action-bar">
+  <button class="btn btn-ghost" onclick="clearAll()">🗑 清除全部</button>
+  <button class="btn btn-ghost" onclick="copyText()">📋 複製文字報價</button>
+  <button class="btn btn-amber" onclick="saveQuote()">💾 存入歷史</button>
+  <button class="btn btn-green" onclick="window.print()">🖨️ 列印 / 輸出 PDF</button>
+</div>
+
+</div><!-- /container -->
+
+<!-- Modal: 歷史 -->
+<div class="modal-bg" id="history-modal">
+  <div class="modal">
+    <div class="modal-title">📋 歷史報價記錄</div>
+    <div id="history-content"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">關閉</button>
+      <button class="btn btn-red" onclick="clearHistory()">清除全部記錄</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: 複製 -->
+<div class="modal-bg" id="copy-modal">
+  <div class="modal">
+    <div class="modal-title">📋 複製文字報價 / LINE</div>
+    <textarea id="copy-text" style="width:100%;height:300px;font-size:12px;font-family:monospace" readonly></textarea>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">關閉</button>
+      <button class="btn btn-green" onclick="doCopy()">複製文字</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: AI 參考價格 -->
+<div class="modal-bg" id="ai-modal">
+  <div class="modal modal-xl">
+    <div class="modal-title">🤖 AI 近期參考價格
+      <span style="font-size:10.5px;color:var(--text2);font-weight:400">台北市一個月內平均行情</span>
+    </div>
+    <div style="font-size:11px;color:var(--text2);margin-bottom:14px;padding:9px 12px;background:var(--amber-dim);border:1px solid rgba(245,166,35,0.2);border-radius:7px">
+      ⚠️ 以下由 AI 搜尋台北市近期工程行情，僅供參考，實際價格依廠商、材料、工期而異
+    </div>
+    <div id="ai-price-content">
+      <div style="text-align:center;padding:40px;color:var(--text2)">
+        <div class="spinner" style="margin:0 auto 14px"></div>
+        <div>正在透過 AI 搜尋台北市最新工程行情...</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">關閉</button>
+      <button class="btn btn-blue" onclick="fetchAIPrices()">🔄 重新搜尋</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: 工法圖庫 -->
+<div class="modal-bg" id="gallery-modal">
+  <div class="modal modal-xl">
+    <div class="modal-title">🖼 工法材料圖庫</div>
+    <div class="gal-tabs" id="gal-tabs"></div>
+    <div class="gal-grid" id="gal-grid"></div>
+    <div id="gal-detail" style="display:none;margin-top:14px;padding:14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border2)"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">關閉</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// 分類定義
+// ══════════════════════════════════════════
+const GROUPS = [
+  { id:'A', label:'A類 基礎工程類', icon:'🏗️' },
+  { id:'B', label:'B類 材料道具類', icon:'📦' },
+];
+
+const SECTIONS = [
+  { id:'A01', group:'A', label:'拆除保護', icon:'🔨',
+    items:['拆除舊裝潢','拆除牆面','地板拆除','木作拆除','保護工程','廢棄物清運','隔音棉拆除'],
+    specs:['一般','加強','特殊'], units:['式','m²','坪'] },
+  { id:'A02', group:'A', label:'消防', icon:'🔴',
+    items:['消防灑水頭移位','消防偵煙器','緊急照明燈','消防管線配置','消防箱移位','消防閘門'],
+    specs:['一般','加強'], units:['式','個','組'] },
+  { id:'A03', group:'A', label:'水電', icon:'⚡',
+    items:['電路配線','插座增設','開關工程','給排水配管','熱水器配管','浴室給水','空調電源','照明迴路'],
+    specs:['一般','加強','加大'], units:['式','m','個','組'] },
+  { id:'A04', group:'A', label:'弱電', icon:'📡',
+    items:['網路線配線','電話線配管','監視系統','門禁系統','音響配線','智慧家居','對講機'],
+    specs:['一般','進口','智能'], units:['式','m','個','組'] },
+  { id:'A05', group:'A', label:'泥作', icon:'🧱',
+    items:['泥作地坪','泥作牆面','防水工程','磁磚貼附','浴室防水','廚房防水','浴室打底','地坪整平'],
+    specs:['一般','加強','進口'], units:['式','m²','坪'] },
+  { id:'A06', group:'A', label:'輕隔間', icon:'🪟',
+    items:['輕隔間牆','矽酸鈣板','石膏板隔間','玻璃輕隔間','木作隔間','活動隔間'],
+    specs:['一般','隔音','防火'], units:['式','m²','坪'] },
+  { id:'A07', group:'A', label:'木作', icon:'🪵',
+    items:['天花板木作','電視牆木作','床頭背板','門片工程','木作造型牆','包柱工程','走道天花板'],
+    specs:['一般','訂製','精品'], units:['式','m²','坪'] },
+  { id:'A08', group:'A', label:'系統櫃', icon:'🗄️',
+    items:['主臥衣櫃','玄關鞋櫃','廚具系統','系統書櫃','餐廚收納','儲藏室規劃','洗衣機台'],
+    specs:['國產系統','進口系統','訂製'], units:['式','組','m'] },
+  { id:'A09', group:'A', label:'金屬', icon:'🔩',
+    items:['不鏽鋼工程','鐵件造型','金屬收邊','扶手工程','鐵件書架','金屬門框','鍍鈦件'],
+    specs:['一般','不鏽鋼','鍍鈦'], units:['式','m','組'] },
+  { id:'A10', group:'A', label:'玻璃', icon:'💎',
+    items:['玻璃隔間','強化玻璃','玻璃門','鏡面工程','噴砂玻璃','長虹玻璃','玻璃展示櫃'],
+    specs:['一般','強化','超白'], units:['式','m²','片'] },
+  { id:'A11', group:'A', label:'地面', icon:'🏁',
+    items:['拋光石英磚','木地板','塑膠地磚','環氧樹脂地板','超耐磨地板','天然石材','SPC地板'],
+    specs:['一般','進口','訂製'], units:['式','m²','坪'] },
+  { id:'A12', group:'A', label:'油漆', icon:'🎨',
+    items:['牆面油漆','天花板油漆','特殊塗料','噴漆工程','樂土漆','珪藻土','礦物塗料'],
+    specs:['一般','進口','特殊'], units:['式','m²','坪'] },
+  { id:'A13', group:'A', label:'空調', icon:'❄️',
+    items:['冷氣主機','室外機配置','風管工程','冷媒配管','全熱交換機','除濕機','吊隱式冷氣'],
+    specs:['一般','變頻','智能'], units:['式','台','組'] },
+  { id:'A14', group:'A', label:'清潔', icon:'🧹',
+    items:['工程清潔','細部清潔','窗戶清潔','地板打蠟','消毒除菌','廚具清潔'],
+    specs:['一般','精緻','深層'], units:['式','坪','次'] },
+  { id:'B01', group:'B', label:'磁磚', icon:'⬜',
+    items:['拋光石英磚','復古磚','馬賽克磚','木紋磚','大理石磚','花磚','地鐵磚','大板磚'],
+    specs:['國產','進口','手工'], units:['m²','坪','箱'] },
+  { id:'B02', group:'B', label:'衛浴設備', icon:'🚿',
+    items:['馬桶','洗臉盆','浴缸','淋浴拉門','浴室鏡','浴室配件','馬桶蓋','龍頭組'],
+    specs:['國產','進口','精品'], units:['套','個','組'] },
+  { id:'B03', group:'B', label:'燈具', icon:'💡',
+    items:['主燈','間接照明','崁燈','立燈','壁燈','軌道燈','戶外燈','夜燈'],
+    specs:['國產','進口','設計師款'], units:['套','個','組'] },
+  { id:'B04', group:'B', label:'窗簾', icon:'🪟',
+    items:['捲簾','百葉簾','布簾','木百葉','紗簾','蜂巢簾','羅馬簾','防曬簾'],
+    specs:['國產','進口','訂製'], units:['式','組','窗'] },
+  { id:'B05', group:'B', label:'軟裝家具', icon:'🛋️',
+    items:['沙發','餐桌椅','主臥床架','床頭燈','地毯','裝飾掛畫','植栽佈置','抱枕組','邊几'],
+    specs:['國產','進口','訂製'], units:['式','件','套'] },
+];
+
+const PIE_COLORS = ['#50e88a','#5ba4f5'];
+const SEC_COLORS = { A:'green', B:'b' };
+
+function fmt(n){ return 'NT$\u00a0'+Math.round(n).toLocaleString('zh-TW'); }
+
+// ══ BUILD SECTIONS ══
+function buildSections(){
+  const cont = document.getElementById('sections-container');
+  cont.innerHTML = '';
+  GROUPS.forEach(grp => {
+    const divider = document.createElement('div');
+    divider.className = 'group-divider';
+    const cls = grp.id==='B' ? ' b' : '';
+    divider.innerHTML = `
+      <span class="group-badge${cls}">${grp.icon} ${grp.label}</span>
+      <div class="group-line"></div>
+      <span class="group-total-label">小計</span>
+      <span class="group-total-val${cls}" id="grp-total-${grp.id}">NT$\u00a00</span>`;
+    cont.appendChild(divider);
+
+    SECTIONS.filter(s=>s.group===grp.id).forEach(sec => {
+      const color = SEC_COLORS[sec.group];
+      const el = document.createElement('div');
+      el.className = 'section-card';
+      el.id = 'sec-'+sec.id;
+      el.innerHTML = `
+        <div class="section-head" onclick="toggleSec('${sec.id}')">
+          <div class="section-head-left">
+            <span class="sec-id${color==='b'?' b':''}">${sec.id}</span>
+            <span class="sec-icon">${sec.icon}</span>
+            <span class="sec-name">${sec.label}</span>
+          </div>
+          <div class="sec-right">
+            <span class="sec-total${color==='b'?' b':''}" id="total-${sec.id}">NT$\u00a00</span>
+            <span class="caret" id="caret-${sec.id}">▶</span>
+          </div>
+        </div>
+        <div class="section-body" id="body-${sec.id}" style="display:none">
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th style="min-width:130px">項目</th>
+                <th style="min-width:76px">規格</th>
+                <th style="min-width:88px">單價（元）</th>
+                <th style="min-width:62px">數量</th>
+                <th style="min-width:58px">單位</th>
+                <th style="min-width:96px">小計</th>
+                <th></th>
+              </tr></thead>
+              <tbody id="tbody-${sec.id}"></tbody>
+            </table>
+          </div>
+          <button class="add-btn" onclick="addRow('${sec.id}')">＋ 新增項目</button>
+        </div>`;
+      cont.appendChild(el);
+    });
+  });
+}
+
+function toggleSec(id){
+  const body = document.getElementById('body-'+id);
+  const caret = document.getElementById('caret-'+id);
+  const hidden = body.style.display === 'none';
+  body.style.display = hidden ? '' : 'none';
+  if(caret){ caret.classList.toggle('open', hidden); }
+}
+
+function addRow(secId, data){
+  const sec = SECTIONS.find(s=>s.id===secId);
+  const tbody = document.getElementById('tbody-'+secId);
+  const tr = document.createElement('tr');
+  const d = data||{};
+  const cls = sec.group==='B' ? ' b' : '';
+  const itemSel = `<select onchange="recalc()">`+sec.items.map((it,i)=>`<option${(d.item===it||(!d.item&&i===0))?' selected':''}>${it}</option>`).join('')+`</select>`;
+  const specSel = `<select onchange="recalc()">`+sec.specs.map((sp,i)=>`<option${(d.spec===sp||(!d.spec&&i===0))?' selected':''}>${sp}</option>`).join('')+`</select>`;
+  const unitSel = `<select onchange="recalc()">`+sec.units.map((u,i)=>`<option${(d.unit===u||(!d.unit&&i===0))?' selected':''}>${u}</option>`).join('')+`</select>`;
+  tr.innerHTML = `
+    <td>${itemSel}</td>
+    <td>${specSel}</td>
+    <td><input type="number" value="${d.price||3000}" min="0" step="100" onchange="recalc()" style="width:86px"></td>
+    <td><input type="number" value="${d.qty||1}" min="0.1" step="0.5" onchange="recalc()" style="width:58px"></td>
+    <td>${unitSel}</td>
+    <td class="sub-cell${cls}">NT$\u00a03,000</td>
+    <td><button class="rm-btn" onclick="this.closest('tr').remove();recalc()" title="刪除">×</button></td>`;
+  tbody.appendChild(tr);
+  recalc();
+}
+
+function getSectionTotal(secId){
+  let t = 0;
+  document.querySelectorAll(`#tbody-${secId} tr`).forEach(tr=>{
+    const ins = tr.querySelectorAll('input[type=number]');
+    if(ins.length>=2){
+      const sub = (parseFloat(ins[0].value)||0)*(parseFloat(ins[1].value)||1);
+      const sc = tr.querySelector('.sub-cell');
+      if(sc) sc.textContent = fmt(sub);
+      t += sub;
+    }
+  });
+  document.getElementById('total-'+secId).textContent = fmt(t);
+  return t;
+}
+
+function recalc(){
+  const totals = SECTIONS.map(s=>getSectionTotal(s.id));
+  const cost = totals.reduce((a,b)=>a+b,0);
+  const rate = (parseInt(document.getElementById('profit-rate').value)||25)/100;
+  const quote = cost*(1+rate);
+  const area = parseFloat(document.getElementById('area').value)||1;
+  document.getElementById('cost-total').textContent = fmt(cost);
+  document.getElementById('quote-total').textContent = fmt(quote);
+  document.getElementById('per-ping').textContent = fmt(quote/area);
+  GROUPS.forEach(grp=>{
+    const secs = SECTIONS.filter(s=>s.group===grp.id);
+    const gt = secs.reduce((a,s)=>a+(totals[SECTIONS.indexOf(s)]||0),0);
+    const el = document.getElementById('grp-total-'+grp.id);
+    if(el) el.textContent = fmt(gt);
+  });
+  drawPie(totals);
+}
+
+function drawPie(vals){
+  const canvas = document.getElementById('pie-chart');
+  const ctx = canvas.getContext('2d');
+  const cx=80,cy=80,r=76,ri=36;
+  ctx.clearRect(0,0,160,160);
+  const groupVals = GROUPS.map(grp=>
+    SECTIONS.filter(s=>s.group===grp.id).reduce((a,s)=>a+(vals[SECTIONS.indexOf(s)]||0),0)
+  );
+  const total = groupVals.reduce((a,b)=>a+b,0)||1;
+  let angle = -Math.PI/2;
+  groupVals.forEach((v,i)=>{
+    const sweep = v/total*Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,angle,angle+sweep);
+    ctx.closePath(); ctx.fillStyle=PIE_COLORS[i]; ctx.fill();
+    angle+=sweep;
+  });
+  ctx.beginPath(); ctx.arc(cx,cy,ri,0,Math.PI*2);
+  ctx.fillStyle='#1a1a20'; ctx.fill();
+
+  const legend = document.getElementById('pie-legend');
+  legend.innerHTML = groupVals.map((v,i)=>{
+    const pct = Math.round(v/total*100);
+    return `<div class="leg">
+      <div class="leg-dot" style="background:${PIE_COLORS[i]}"></div>
+      <span class="leg-name">${GROUPS[i].label}</span>
+      <span class="leg-pct">${pct}%</span>
+      <span class="leg-amt">${fmt(v)}</span>
+    </div>`;
+  }).join('') +
+  '<div style="height:8px"></div>' +
+  SECTIONS.map((s,i)=>vals[i]>0?`
+    <div class="leg">
+      <span style="font-size:9px;color:var(--text3);min-width:30px">${s.id}</span>
+      <span class="leg-name" style="font-size:11px">${s.label}</span>
+      <span class="leg-amt">${fmt(vals[i])}</span>
+    </div>`:''
+  ).join('');
+}
+
+function updateSpaceType(){
+  const m={apartment:30,house:55,office:60,shop:40,new:35,old:28};
+  document.getElementById('area').value=m[document.getElementById('space-type').value]||30;
+  recalc();
+}
+
+// ══ QUOTE DATA ══
+function getQuoteData(){
+  const rows={};
+  SECTIONS.forEach(sec=>{
+    rows[sec.id]=[];
+    document.querySelectorAll(`#tbody-${sec.id} tr`).forEach(tr=>{
+      const sels=tr.querySelectorAll('select');
+      const ins=tr.querySelectorAll('input[type=number]');
+      if(ins.length>=2) rows[sec.id].push({
+        item:sels[0]?.value, spec:sels[1]?.value,
+        price:parseFloat(ins[0].value)||0, qty:parseFloat(ins[1].value)||1,
+        unit:sels[2]?.value
+      });
+    });
+  });
+  return {
+    client:document.getElementById('client-name').value,
+    phone:document.getElementById('client-phone').value,
+    email:document.getElementById('client-email').value,
+    addr:document.getElementById('project-addr').value,
+    area:document.getElementById('area').value,
+    style:document.getElementById('style-type').value,
+    spaceType:document.getElementById('space-type').value,
+    profitRate:document.getElementById('profit-rate').value,
+    note:document.getElementById('note').value,
+    bankName:document.getElementById('bank-name').value,
+    bankBranch:document.getElementById('bank-branch').value,
+    bankHolder:document.getElementById('bank-holder').value,
+    bankAccount:document.getElementById('bank-account').value,
+    payTerms:document.getElementById('pay-terms').value,
+    validDays:document.getElementById('valid-days').value,
+    startDate:document.getElementById('start-date').value,
+    sigName:document.getElementById('sig-name').value,
+    sigDate:document.getElementById('sig-date').value,
+    rows, date:new Date().toLocaleDateString('zh-TW')
+  };
+}
+
+function saveQuote(){
+  const data=getQuoteData();
+  if(!data.client){ alert('請先填入客戶姓名再存檔'); return; }
+  const list=JSON.parse(localStorage.getItem('id_quotes_v3')||'[]');
+  list.unshift({id:Date.now(),...data});
+  localStorage.setItem('id_quotes_v3',JSON.stringify(list.slice(0,30)));
+  alert(`✅ 已存檔：${data.client}（${data.date}）`);
+}
+
+function loadQuote(data){
+  ['client-name','client-phone','client-email','project-addr','area','note',
+   'bank-name','bank-branch','bank-holder','bank-account','valid-days','start-date',
+   'sig-name','sig-date'].forEach(id=>{
+    const el=document.getElementById(id);
+    const key=id.replace(/-([a-z])/g,(_,c)=>c.toUpperCase())
+               .replace('clientName','client').replace('clientPhone','phone')
+               .replace('clientEmail','email').replace('projectAddr','addr')
+               .replace('bankName','bankName').replace('bankBranch','bankBranch')
+               .replace('bankHolder','bankHolder').replace('bankAccount','bankAccount')
+               .replace('validDays','validDays').replace('startDate','startDate')
+               .replace('sigName','sigName').replace('sigDate','sigDate');
+    if(el) el.value=data[key]||'';
+  });
+  // manual
+  document.getElementById('client-name').value=data.client||'';
+  document.getElementById('client-phone').value=data.phone||'';
+  document.getElementById('client-email').value=data.email||'';
+  document.getElementById('project-addr').value=data.addr||'';
+  document.getElementById('area').value=data.area||30;
+  document.getElementById('profit-rate').value=data.profitRate||25;
+  document.getElementById('profit-label').textContent=(data.profitRate||25)+'%';
+  document.getElementById('note').value=data.note||'';
+  document.getElementById('bank-name').value=data.bankName||'';
+  document.getElementById('bank-branch').value=data.bankBranch||'';
+  document.getElementById('bank-holder').value=data.bankHolder||'';
+  document.getElementById('bank-account').value=data.bankAccount||'';
+  document.getElementById('valid-days').value=data.validDays||30;
+  document.getElementById('start-date').value=data.startDate||'';
+  document.getElementById('sig-name').value=data.sigName||'';
+  document.getElementById('sig-date').value=data.sigDate||'';
+  SECTIONS.forEach(sec=>{
+    document.getElementById('tbody-'+sec.id).innerHTML='';
+    (data.rows?.[sec.id]||[]).forEach(r=>addRow(sec.id,r));
+  });
+  closeModal(); recalc();
+}
+
+function showHistory(){
+  const list=JSON.parse(localStorage.getItem('id_quotes_v3')||'[]');
+  const cont=document.getElementById('history-content');
+  if(!list.length){ cont.innerHTML='<div class="empty">尚無歷史記錄</div>'; }
+  else {
+    cont.innerHTML='<div>'+list.map(q=>{
+      const cost=SECTIONS.reduce((a,s)=>a+(q.rows?.[s.id]||[]).reduce((b,r)=>b+r.price*r.qty,0),0);
+      const quote=cost*(1+(parseInt(q.profitRate)||25)/100);
+      return `<div class="hist-item">
+        <div>
+          <div style="font-size:13px;font-weight:600">${q.client} — ${q.addr||'未填地址'}</div>
+          <div class="hist-meta">${q.date} · ${q.area}坪 · ${q.style||''} · 報價 ${fmt(quote)}</div>
+        </div>
+        <div class="hist-btns">
+          <button class="hist-btn" onclick="loadQuote(${JSON.stringify(q).replace(/"/g,'&quot;')})">載入</button>
+          <button class="hist-btn del" onclick="deleteQuote(${q.id})">刪除</button>
+        </div>
+      </div>`;
+    }).join('')+'</div>';
+  }
+  document.getElementById('history-modal').classList.add('open');
+}
+
+function deleteQuote(id){
+  if(!confirm('確定刪除？')) return;
+  const list=JSON.parse(localStorage.getItem('id_quotes_v3')||'[]').filter(q=>q.id!==id);
+  localStorage.setItem('id_quotes_v3',JSON.stringify(list)); showHistory();
+}
+function clearHistory(){
+  if(!confirm('確定清除所有歷史？')) return;
+  localStorage.removeItem('id_quotes_v3'); showHistory();
+}
+function closeModal(){ document.querySelectorAll('.modal-bg').forEach(m=>m.classList.remove('open')); }
+document.addEventListener('click',e=>{ if(e.target.classList.contains('modal-bg')) closeModal(); });
+
+function clearAll(){
+  if(!confirm('確定清除所有資料？')) return;
+  SECTIONS.forEach(s=>{ document.getElementById('tbody-'+s.id).innerHTML=''; });
+  ['client-name','client-phone','client-email','project-addr','note',
+   'bank-name','bank-branch','bank-holder','bank-account','start-date','sig-name','sig-date']
+    .forEach(id=>{ document.getElementById(id).value=''; });
+  document.getElementById('area').value=30;
+  document.getElementById('profit-rate').value=25;
+  document.getElementById('profit-label').textContent='25%';
+  clearSig(); recalc();
+}
+
+function copyText(){
+  const data=getQuoteData();
+  const totals=SECTIONS.map(s=>(data.rows[s.id]||[]).reduce((a,r)=>a+r.price*r.qty,0));
+  const cost=totals.reduce((a,b)=>a+b,0);
+  const rate=(parseInt(data.profitRate)||25)/100;
+  const quote=cost*(1+rate);
+  const area=parseFloat(data.area)||1;
+  let txt=`【室內設計報價單】\n━━━━━━━━━━━━━━━━\n`;
+  txt+=`客戶：${data.client||'—'}　電話：${data.phone||'—'}\n`;
+  txt+=`地址：${data.addr||'—'}\n`;
+  txt+=`坪數：${data.area} 坪 ｜ 風格：${data.style||'—'}\n`;
+  txt+=`日期：${data.date}\n\n`;
+  GROUPS.forEach(grp=>{
+    const secs=SECTIONS.filter(s=>s.group===grp.id&&(data.rows[s.id]||[]).length>0);
+    if(!secs.length) return;
+    txt+=`▌▌ ${grp.label}\n`;
+    secs.forEach(sec=>{
+      txt+=`  ▸ ${sec.id} ${sec.label}\n`;
+      (data.rows[sec.id]||[]).forEach(r=>{ txt+=`    ${r.item}（${r.spec}）× ${r.qty} ${r.unit} = ${fmt(r.price*r.qty)}\n`; });
+    });
+    txt+='\n';
+  });
+  txt+=`━━━━━━━━━━━━━━━━\n`;
+  txt+=`工料成本：${fmt(cost)}\n利潤率：${data.profitRate}%\n`;
+  txt+=`📌 建議報價：${fmt(quote)}\n每坪單價：${fmt(quote/area)}\n`;
+  if(data.bankAccount) txt+=`\n匯款：${data.bankHolder} ${data.bankAccount}（${data.bankName} ${data.bankBranch}）\n`;
+  txt+=`付款：${data.payTerms||'—'}　有效期：${data.validDays||30}天\n`;
+  if(data.note) txt+=`\n備註：${data.note}\n`;
+  document.getElementById('copy-text').value=txt;
+  document.getElementById('copy-modal').classList.add('open');
+}
+function doCopy(){
+  const ta=document.getElementById('copy-text');
+  ta.select(); ta.setSelectionRange(0,99999);
+  navigator.clipboard.writeText(ta.value).then(()=>alert('✅ 已複製！'));
+}
+
+// ══ SIGNATURE ══
+const sigCanvas = document.getElementById('sig-canvas');
+const sigCtx = sigCanvas.getContext('2d');
+let sigDrawing = false;
+
+function resizeSigCanvas(){
+  const w = sigCanvas.parentElement.clientWidth;
+  sigCanvas.width = w;
+  sigCanvas.height = 130;
+  sigCtx.strokeStyle = '#c8e6c9';
+  sigCtx.lineWidth = 2.2;
+  sigCtx.lineCap = 'round';
+  sigCtx.lineJoin = 'round';
+}
+resizeSigCanvas();
+window.addEventListener('resize', resizeSigCanvas);
+
+function getSigPos(e){
+  const rect=sigCanvas.getBoundingClientRect();
+  const sx=sigCanvas.width/rect.width, sy=sigCanvas.height/rect.height;
+  const src=e.touches?.[0]||e;
+  return{x:(src.clientX-rect.left)*sx,y:(src.clientY-rect.top)*sy};
+}
+sigCanvas.addEventListener('mousedown',e=>{sigDrawing=true;const p=getSigPos(e);sigCtx.beginPath();sigCtx.moveTo(p.x,p.y);});
+sigCanvas.addEventListener('mousemove',e=>{if(!sigDrawing)return;const p=getSigPos(e);sigCtx.lineTo(p.x,p.y);sigCtx.stroke();});
+sigCanvas.addEventListener('mouseup',()=>sigDrawing=false);
+sigCanvas.addEventListener('mouseleave',()=>sigDrawing=false);
+sigCanvas.addEventListener('touchstart',e=>{e.preventDefault();sigDrawing=true;const p=getSigPos(e);sigCtx.beginPath();sigCtx.moveTo(p.x,p.y);});
+sigCanvas.addEventListener('touchmove',e=>{e.preventDefault();if(!sigDrawing)return;const p=getSigPos(e);sigCtx.lineTo(p.x,p.y);sigCtx.stroke();});
+sigCanvas.addEventListener('touchend',()=>sigDrawing=false);
+function clearSig(){ sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height); }
+function saveSigImage(){
+  const link=document.createElement('a'); link.download='signature.png'; link.href=sigCanvas.toDataURL(); link.click();
+}
+
+// ══ AI PRICE LOOKUP ══
+async function fetchAIPrices(){
+  document.getElementById('ai-modal').classList.add('open');
+  const cont=document.getElementById('ai-price-content');
+  cont.innerHTML=`<div style="text-align:center;padding:40px;color:var(--text2)">
+    <div class="spinner" style="margin:0 auto 14px"></div>
+    <div>正在透過 AI 搜尋台北市最新工程行情...</div>
+  </div>`;
+  try {
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1500,
+        tools:[{type:'web_search_20250305',name:'web_search'}],
+        messages:[{
+          role:'user',
+          content:`請搜尋台北市2025年最新室內裝修工程行情，提供以下各類別在台北市一個月內的平均市場價格，並以JSON陣列格式回答，每筆包含 id, label, price(字串含範圍), unit, note 欄位，僅輸出JSON陣列，不要其他說明文字：
+A01拆除保護, A03水電, A05泥作, A07木作, A08系統櫃, A09金屬鐵件, A11地面, A12油漆, A13空調, B01磁磚, B02衛浴設備, B03燈具
+範例格式：[{"id":"A03","label":"水電工程","price":"1,200~1,800","unit":"元/m","note":"含配線及插座"}]`
+        }]
+      })
+    });
+    const data=await resp.json();
+    const text=(data.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('');
+    let prices=[];
+    try{
+      const s=text.indexOf('['),e=text.lastIndexOf(']');
+      if(s>=0&&e>s) prices=JSON.parse(text.slice(s,e+1));
+    }catch(e){}
+    if(prices.length){
+      cont.innerHTML=prices.map(p=>`
+        <div class="ai-item">
+          <div class="ai-id">${p.id}</div>
+          <div>
+            <div class="ai-label">${p.label}</div>
+            <div class="ai-price">${p.price} <span style="font-size:12px;font-weight:400;color:var(--text2)">${p.unit}</span></div>
+            <div class="ai-note">${p.note||''}</div>
+          </div>
+        </div>`).join('');
+    } else {
+      cont.innerHTML=`<div class="empty">暫時無法取得資料，請稍後再試<br><small style="color:var(--text3)">${text.slice(0,200)||''}</small></div>`;
+    }
+  } catch(e){
+    cont.innerHTML=`<div class="empty">連線失敗：${e.message}</div>`;
+  }
+}
+function showAIPrice(){ fetchAIPrices(); }
+
+// ══ GALLERY ══
+const GALLERY = {
+  'A類 基礎工程':[
+    {icon:'🔨',name:'拆除工程',desc:'RC牆體、木作隔間、舊磁磚拆除'},
+    {icon:'🔴',name:'消防配置',desc:'灑水頭移位、偵煙器、緊急照明'},
+    {icon:'⚡',name:'水電配管',desc:'PVC管線、電線迴路配置'},
+    {icon:'📡',name:'弱電系統',desc:'網路、監視、門禁、音響'},
+    {icon:'🧱',name:'泥作防水',desc:'浴室防水、地坪找平、磁磚打底'},
+    {icon:'🪟',name:'輕隔間牆',desc:'矽酸鈣板、石膏板輕隔間'},
+    {icon:'🪵',name:'木作天花板',desc:'矽酸鈣板封板、造型弧形天花'},
+    {icon:'🗄️',name:'系統衣櫃',desc:'塑合板系統板、緩衝鉸鏈、無把手'},
+    {icon:'🔩',name:'鐵件工藝',desc:'黑鐵烤漆、不鏽鋼鍍鈦線條'},
+    {icon:'💎',name:'玻璃隔間',desc:'強化玻璃、長虹玻璃、噴砂玻璃'},
+    {icon:'🏁',name:'地面施工',desc:'超耐磨地板、大板磚無縫工法'},
+    {icon:'🎨',name:'油漆塗裝',desc:'乳膠漆、樂土、礦物塗料工法'},
+    {icon:'❄️',name:'冷氣空調',desc:'分離式、吊隱式風管、全熱交換'},
+    {icon:'🧹',name:'工程清潔',desc:'細部清潔、地板打蠟、消毒除菌'},
+  ],
+  'B類 材料道具':[
+    {icon:'⬜',name:'大板磚 60×120',desc:'無縫工法、大理石紋、人字拼'},
+    {icon:'🟫',name:'超耐磨地板',desc:'人字拼、魚骨拼、仿木紋 SPC'},
+    {icon:'🚿',name:'衛浴設備',desc:'獨立浴缸、嵌入式、無邊框淋浴拉門'},
+    {icon:'💡',name:'燈具配置',desc:'崁燈、軌道燈、壁燈間接照明'},
+    {icon:'🪟',name:'蜂巢遮光簾',desc:'蜂巢簾、羅馬簾、木百葉'},
+    {icon:'🛋️',name:'布藝沙發',desc:'義大利布、L型、模組化沙發'},
+  ],
+  '設計風格':[
+    {icon:'🏡',name:'現代簡約',desc:'白色系、無把手、大量留白'},
+    {icon:'🌿',name:'北歐風',desc:'木質元素、自然光、溫暖色系'},
+    {icon:'⚙️',name:'工業風',desc:'清水模、裸露管線、黑鐵'},
+    {icon:'👑',name:'輕奢風',desc:'大理石、鍍鈦金屬線條'},
+    {icon:'🌸',name:'日式無印',desc:'原木色系、格柵、極簡收納'},
+    {icon:'🏛️',name:'古典歐式',desc:'線板、拱門、水晶燈'},
+  ]
+};
+let activeCat = Object.keys(GALLERY)[0];
+
+function showGallery(){ buildGallery(); document.getElementById('gallery-modal').classList.add('open'); }
+function buildGallery(){
+  const cats=Object.keys(GALLERY);
+  document.getElementById('gal-tabs').innerHTML=cats.map(c=>
+    `<button class="gal-tab${c===activeCat?' active':''}" onclick="setGalCat('${c}')">${c}</button>`
+  ).join('');
+  document.getElementById('gal-grid').innerHTML=(GALLERY[activeCat]||[]).map((item,i)=>`
+    <div class="gal-item" onclick="showGalDetail(${i})">
+      <div class="gal-thumb">${item.icon}</div>
+      <div class="gal-info">
+        <div class="gal-name">${item.name}</div>
+        <div class="gal-desc">${item.desc}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('gal-detail').style.display='none';
+}
+function setGalCat(c){ activeCat=c; buildGallery(); }
+function showGalDetail(i){
+  const item=GALLERY[activeCat][i];
+  const el=document.getElementById('gal-detail');
+  el.style.display='block';
+  el.innerHTML=`<div style="display:flex;gap:12px;align-items:center">
+    <div style="font-size:36px">${item.icon}</div>
+    <div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:4px">${item.name}</div>
+      <div style="color:var(--text2);font-size:13px">${item.desc}</div>
+    </div>
+  </div>`;
+}
+
+// ══ DEFAULTS ══
+function initDefaults(){
+  const defaults=[
+    {secId:'A03',rows:[{item:'電路配線',spec:'一般',price:1200,qty:15,unit:'m'},{item:'給排水配管',spec:'一般',price:800,qty:10,unit:'m'}]},
+    {secId:'A05',rows:[{item:'泥作地坪',spec:'一般',price:2500,qty:8,unit:'m²'},{item:'防水工程',spec:'加強',price:5000,qty:1,unit:'式'}]},
+    {secId:'A07',rows:[{item:'天花板木作',spec:'一般',price:3500,qty:8,unit:'m²'},{item:'電視牆木作',spec:'訂製',price:45000,qty:1,unit:'式'}]},
+    {secId:'A08',rows:[{item:'主臥衣櫃',spec:'國產系統',price:55000,qty:1,unit:'式'}]},
+    {secId:'B03',rows:[{item:'崁燈',spec:'國產',price:800,qty:20,unit:'個'}]},
+    {secId:'B05',rows:[{item:'沙發',spec:'國產',price:28000,qty:1,unit:'套'}]},
+  ];
+  defaults.forEach(d=>{
+    d.rows.forEach(r=>addRow(d.secId,r));
+    const body=document.getElementById('body-'+d.secId);
+    const caret=document.getElementById('caret-'+d.secId);
+    if(body){ body.style.display=''; caret?.classList.add('open'); }
+  });
+}
+
+// ══ DATE ══
+document.getElementById('quote-date').textContent='報價日期：'+new Date().toLocaleDateString('zh-TW');
+
+buildSections();
+initDefaults();
+recalc();
+</script>
+</body>
+</html>
